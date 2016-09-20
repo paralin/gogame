@@ -1,12 +1,6 @@
 syntax = "proto3";
 package gogame;
 
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-
-option (gogoproto.unmarshaler_all) = true;
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-
 /*
 * Networked representation of an entity.
 */
