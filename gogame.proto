@@ -12,7 +12,8 @@ option (gogoproto.sizer_all) = true;
 */
 message NetEntity {
   uint32 id = 1;
-  repeated NetComponent component = 2;
+  uint32 parent_id = 2;
+  repeated NetComponent component = 3;
 }
 
 /*

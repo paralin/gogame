@@ -6,6 +6,9 @@ package gogame
 type Entity struct {
 	Id uint32
 
+	// Parent entity.
+	Parent *Entity
+
 	// Map of component ID to implementation instance
 	Components map[uint32]Component
 }
@@ -21,8 +24,14 @@ func (ent *Entity) ToNetworkInit() *NetEntity {
 		i++
 	}
 
+	var parentId uint32
+	if ent.Parent != nil && ent.Parent != ent {
+		parentId = ent.Parent.Id
+	}
+
 	return &NetEntity{
 		Id:        ent.Id,
+		ParentId:  parentId,
 		Component: components,
 	}
 }
