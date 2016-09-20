@@ -19,14 +19,6 @@ type Component interface {
 	InitData() []byte
 }
 
-type ComponentFactory interface {
-	// Return the metadata for this component
-	Meta() ComponentMeta
-
-	// Instantiate a new component
-	New() Component
-}
-
 /*
  * To initial network representation
  */
