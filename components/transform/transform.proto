@@ -1,0 +1,21 @@
+syntax = "proto3";
+package transform;
+
+message TransformPosition {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message TransformScale {
+  int32 x_scale = 1;
+  int32 y_scale = 2;
+}
+
+message TransformData {
+  TransformPosition position = 1;
+  TransformScale scale = 2;
+}
+
+message TransformComponentInit {
+  TransformData data = 1;
+}
