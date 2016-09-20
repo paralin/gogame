@@ -37,6 +37,48 @@ All of the types in GoGame are in Protobuf for fast serialization and transport.
 
 Every component has an ID (unsigned integer). The first few IDs are reserved for the built in components (transform, for example).
 
+Creating Game Entities
+======================
+
+An entity is anything in your game. This could be:
+
+ - a type of weapon
+   - This would be composed of:
+     - transform component, in parent-relative mode
+     - "weapon" component, presumably with some kind of weapon system
+     - parent (player entity)
+ - a player
+
+As an entity needs to be set up by someone, there is a mechanism in
+place to build entities. This is called the EntityFactory interface.
+
+An EntityFactory would be the generic prototype that knows how to
+construct an instance of your entity. You would have one for each type
+of entity. This could be, for example:
+
+ - one for each type of weapon in your game
+ - one for the generic "player"
+ - one for each NPC in your game, or interactable object
+
+An entity factory knows how to create an entity, by creating a New()
+entity, and then building a tree of children entities using other
+EntityPrototypes, or adding Components to the entity it has just
+created.
+
+Game Rules
+=========
+
+In gogame, a "Game" is an instance of the entire game logic tree. You
+need a object to "tick" and decide what to do each frame.
+
+There are also other events you need to handle, examples include:
+
+ - Player connected
+ - Player disconnected
+
+You implement this logic in your own Game Rules type. This is passed to
+GoGame when you construct the Game on the client or server.
+
 Networking
 ==========
 

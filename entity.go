@@ -7,6 +7,10 @@ import (
 
 type EntityTable map[uint32]*Entity
 
+func NewEntityTable() EntityTable {
+	return make(map[uint32]*Entity)
+}
+
 /*
 * Entity. See NetEntity for networked representation.
  */
@@ -60,7 +64,7 @@ func (ent *Entity) ToNetworkInit() *NetEntity {
 /*
  * Instantiate from network representation.
  */
-func (gr *GameRules) EntityFromNetInit(ent *NetEntity) (*Entity, error) {
+func (gr *Game) EntityFromNetInit(ent *NetEntity) (*Entity, error) {
 	entTable := gr.EntityTable
 	res := &Entity{
 		Id:         ent.Id,

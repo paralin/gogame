@@ -7,6 +7,10 @@ import "fmt"
  */
 type ComponentTable map[uint32]ComponentFactory
 
+func NewComponentTable() ComponentTable {
+	return make(map[uint32]ComponentFactory)
+}
+
 /*
  * Validate a component table.
  */

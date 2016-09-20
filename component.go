@@ -39,7 +39,7 @@ func ComponentToNetworkInit(comp Component) *NetComponent {
 	return res
 }
 
-func (gr *GameRules) ComponentFromId(id uint32) (Component, error) {
+func (gr *Game) ComponentFromId(id uint32) (Component, error) {
 	// Find a factory for this component
 	fact, ok := gr.ComponentTable[id]
 	if !ok {
