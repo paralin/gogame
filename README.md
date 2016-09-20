@@ -35,6 +35,8 @@ Every entity has an ID (unsigned integer). This ID increments until int max at w
 
 All of the types in GoGame are in Protobuf for fast serialization and transport.
 
+Every component has an ID (unsigned integer). The first few IDs are reserved for the built in components (transform, for example).
+
 Networking
 ==========
 

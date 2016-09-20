@@ -7,6 +7,28 @@ option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.marshaler_all) = true;
 option (gogoproto.sizer_all) = true;
 
-message Entity {
+/*
+* Networked representation of an entity.
+*/
+message NetEntity {
+  uint32 id = 1;
+  repeated NetComponent component = 2;
+}
+
+/*
+* Networked representation of a component.
+*/
+message NetComponent {
+  // ID of implementation of component
+  uint32 id = 1;
+
+  // Initial state, deterministic message serialized
+  bytes init_data = 2;
+}
+
+/*
+* Metadata for a component type.
+*/
+message ComponentMeta {
   uint32 id = 1;
 }
