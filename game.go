@@ -14,6 +14,12 @@ type Game struct {
 	GameRules GameRules
 }
 
+func (g *Game) Destroy() {
+	// Delete all entities
+	// Unregister all components
+	// etc...
+}
+
 func BuildGame(componentTable ComponentTable, gameRules GameRules) (*Game, error) {
 	if componentTable == nil {
 		return nil, errors.New("Component table must not be nil.")
