@@ -37,6 +37,23 @@ func (tc *TransformComponent) InitData() []byte {
 	return data
 }
 
+func (tc *TransformComponent) InitFrontend(fe gogame.FrontendComponent) {
+}
+
+func (tc *TransformComponent) Destroy() {
+}
+
+type TransformComponentFactory struct {
+}
+
+func (tff *TransformComponentFactory) Meta() gogame.ComponentMeta {
+	return TransformComponentMeta
+}
+
+func (tff *TransformComponentFactory) New() gogame.Component {
+	return &TransformComponent{}
+}
+
 // Assert at compile time the component is valid
 // This line will fail otherwise.
 var componentAssertion gogame.Component = &TransformComponent{}

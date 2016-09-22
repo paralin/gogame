@@ -23,6 +23,9 @@ type Entity struct {
 	// Map of component ID to implementation instance
 	Components map[uint32]Component
 
+	// Frontend components
+	FrontendComponents map[uint32]FrontendComponent
+
 	// Frontend entity if set
 	FrontendEntity FrontendEntity
 }
@@ -45,11 +48,27 @@ func (ent *Entity) InitFrontendEntity() {
 	if ent.FrontendEntity == nil {
 		return
 	}
-	for _, comp := range ent.Components {
+	for id, comp := range ent.Components {
 		fe := ent.FrontendEntity.AddComponent(comp.Meta().Id)
 		if fe != nil {
+			fe.Init()
+			ent.FrontendComponents[id] = fe
 			comp.InitFrontend(fe)
 		}
+	}
+}
+
+// Destroy the entity
+func (ent *Entity) Destroy() {
+	for cid, comp := range ent.Components {
+		fe, ok := ent.FrontendComponents[cid]
+		if ok && fe != nil {
+			fe.Destroy()
+		}
+		comp.Destroy()
+	}
+	if ent.FrontendEntity != nil {
+		ent.FrontendEntity.Destroy()
 	}
 }
 
@@ -82,8 +101,9 @@ func (ent *Entity) ToNetworkInit() *NetEntity {
 func (gr *Game) EntityFromNetInit(ent *NetEntity) (*Entity, error) {
 	entTable := gr.EntityTable
 	res := &Entity{
-		Id:         ent.Id,
-		Components: make(map[uint32]Component),
+		Id:                 ent.Id,
+		Components:         make(map[uint32]Component),
+		FrontendComponents: make(map[uint32]FrontendComponent),
 	}
 
 	if ent.ParentId != 0 {

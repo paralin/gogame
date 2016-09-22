@@ -20,6 +20,9 @@ type Component interface {
 
 	// Build initial snapshot data for component creation
 	InitData() []byte
+
+	// Destroy the component. Frontend component is automatically cleaned before this is called.
+	Destroy()
 }
 
 /*
