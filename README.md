@@ -117,6 +117,30 @@ It is the component's job to implement what is described above. Thus, the networ
 
 The server-side Component can Emit a message to everyone who can see the Entity or to a specific subset of clients.
 
+Networking Interface
+====================
+
+GoGame provides a general network interface layer. It is up to the game developer to implement the actual transport, and provide an implementation of this network interface layer to GoGame.
+
+A network interface must implement:
+
+ - send
+ - receive
+ - connection state
+
+In terms of server sharding, this is transparent to GoGame. GoGame expects to talk to a server and get back entities + entity sync.
+
+Sharding can be implemented by a man in the middle proxy. Each shard server can be configured with a shard ID `uchar`, and then the most significant byte of all entity ids on that shard can be set to that id. This gives an even distribution of entity ids between servers.
+
+The question is how entities transfer between shards. You will want to seamlessly transfer the objects between the shards without changing the entity IDs. This can be accomplished two ways:
+
+ - Use the most significant byte rule for spawning only
+ - Implement an entity ID rename system.
+
+Second one will be more likely. Renaming / changing an entity ID should not be too hard.
+
+Connecting shards together / implementing sharding is outside the scope of this repository.
+
 Interest based Networking
 =========================
 
