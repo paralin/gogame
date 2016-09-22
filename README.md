@@ -124,7 +124,22 @@ The client only need know about what he can see. The logic of what the client ca
 
 Furthermore, we will want to shard the world into individual pieces.
 
-Integration with JavaScript
-===========================
 
-This library will expose to JavaScript a public function to create a game client instance.
+Renderer / Frontend
+===================
+
+The `gogame` system has no concept of actually displaying the game to the user, or taking input from the user. This must be implemented by something external. In Terram's case, this is done by TypeScript.
+
+GoGame has a generic "Frontend" interface. When creating a game, a struct implementing the Frontend interface can be provided. This interface will be called to sync the internal game state with the frontend. Types of functions the frontend will have to implement might include:
+
+ - Entity added, can return a FrontendEntity object which takes callbacks for entity events.
+   - When an entity is added, the frontend entity object receives:
+     - Init()
+     - AddComponent() for each component, can return a FrontendComponent
+     - InitLate()
+     - And later: Destroy()
+   - Frontend component receives similarly:
+     - Init()
+     - Destroy()
+   - Frontend components can receive function calls from the Go component code.
+     - Examples: set position, etc.

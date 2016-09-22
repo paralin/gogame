@@ -1,6 +1,8 @@
 package gogame
 
-import "errors"
+import (
+	"errors"
+)
 
 /* An instance of a game. */
 type Game struct {
@@ -12,6 +14,9 @@ type Game struct {
 
 	// Game rules instance
 	GameRules GameRules
+
+	// Optional frontend instance
+	Frontend Frontend
 }
 
 func (g *Game) Destroy() {
@@ -20,7 +25,7 @@ func (g *Game) Destroy() {
 	// etc...
 }
 
-func BuildGame(componentTable ComponentTable, gameRules GameRules) (*Game, error) {
+func BuildGame(componentTable ComponentTable, gameRules GameRules, frontend Frontend) (*Game, error) {
 	if componentTable == nil {
 		return nil, errors.New("Component table must not be nil.")
 	}
@@ -33,6 +38,7 @@ func BuildGame(componentTable ComponentTable, gameRules GameRules) (*Game, error
 		EntityTable:    NewEntityTable(),
 		GameRules:      gameRules,
 		ComponentTable: componentTable,
+		Frontend:       frontend,
 	}
 
 	// Test component table
