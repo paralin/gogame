@@ -9,6 +9,9 @@ type Component interface {
 	// Initialize on an entity, with init data.
 	InitWithData(ent *Entity, data []byte)
 
+	// Initialize frontend component
+	InitFrontend(fe FrontendComponent)
+
 	// Called after all components have been Init() or InitWithData()
 	InitLate()
 

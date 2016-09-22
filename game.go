@@ -1,9 +1,5 @@
 package gogame
 
-import (
-	"errors"
-)
-
 /* An instance of a game. */
 type Game struct {
 	// All registered components
@@ -19,6 +15,15 @@ type Game struct {
 	Frontend Frontend
 }
 
+// Add an entity. This should happen AFTER it's initialized.
+func (g *Game) AddEntity(ent *Entity) {
+	g.EntityTable[ent.Id] = ent
+	if g.Frontend != nil {
+		ent.FrontendEntity = g.Frontend.AddEntity(ent)
+		ent.InitFrontendEntity()
+	}
+}
+
 func (g *Game) Destroy() {
 	// Delete all entities
 	// Unregister all components
@@ -27,36 +32,4 @@ func (g *Game) Destroy() {
 	if g.Frontend != nil {
 		g.Frontend.Destroy()
 	}
-}
-
-func BuildGame(componentTable ComponentTable, gameRules GameRules, frontend Frontend) (*Game, error) {
-	if componentTable == nil {
-		return nil, errors.New("Component table must not be nil.")
-	}
-
-	if gameRules == nil {
-		return nil, errors.New("Game rules instance must not be nil.")
-	}
-
-	game := &Game{
-		EntityTable:    NewEntityTable(),
-		GameRules:      gameRules,
-		ComponentTable: componentTable,
-		Frontend:       frontend,
-	}
-
-	// Test component table
-	if err := game.ComponentTable.Validate(); err != nil {
-		return nil, err
-	}
-
-	// Initialize game rules
-	game.GameRules.Init(game)
-
-	// Initialize frontend
-	if game.Frontend != nil {
-		game.Frontend.Init()
-	}
-
-	return game, nil
 }

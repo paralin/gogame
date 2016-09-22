@@ -22,6 +22,9 @@ type Entity struct {
 
 	// Map of component ID to implementation instance
 	Components map[uint32]Component
+
+	// Frontend entity if set
+	FrontendEntity FrontendEntity
 }
 
 /* Call after creating a fresh entity (without init data). */
@@ -35,6 +38,18 @@ func (ent *Entity) InitComponents() {
 func (ent *Entity) LateInitComponents() {
 	for _, comp := range ent.Components {
 		comp.InitLate()
+	}
+}
+
+func (ent *Entity) InitFrontendEntity() {
+	if ent.FrontendEntity == nil {
+		return
+	}
+	for _, comp := range ent.Components {
+		fe := ent.FrontendEntity.AddComponent(comp.Meta().Id)
+		if fe != nil {
+			comp.InitFrontend(fe)
+		}
 	}
 }
 
