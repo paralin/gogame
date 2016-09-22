@@ -23,6 +23,10 @@ func (g *Game) Destroy() {
 	// Delete all entities
 	// Unregister all components
 	// etc...
+
+	if g.Frontend != nil {
+		g.Frontend.Destroy()
+	}
 }
 
 func BuildGame(componentTable ComponentTable, gameRules GameRules, frontend Frontend) (*Game, error) {
@@ -48,6 +52,11 @@ func BuildGame(componentTable ComponentTable, gameRules GameRules, frontend Fron
 
 	// Initialize game rules
 	game.GameRules.Init(game)
+
+	// Initialize frontend
+	if game.Frontend != nil {
+		game.Frontend.Init()
+	}
 
 	return game, nil
 }

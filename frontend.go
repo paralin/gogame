@@ -3,6 +3,7 @@ package gogame
 type Frontend interface {
 	Init()
 	AddEntity(entity *Entity) FrontendEntity
+	Destroy()
 }
 
 type FrontendEntity interface {
