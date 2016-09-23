@@ -27,3 +27,8 @@ message NetComponent {
 message ComponentMeta {
   uint32 id = 1;
 }
+
+enum GameOperatingMode {
+  LOCAL = 0;
+  REMOTE = 1;
+}

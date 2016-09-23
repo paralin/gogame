@@ -79,6 +79,13 @@ There are also other events you need to handle, examples include:
 You implement this logic in your own Game Rules type. This is passed to
 GoGame when you construct the Game on the client or server.
 
+A game doesn't have to be networked, you could make a single player game in the browser or just a sim in the server. Thus, the Game Rules and overall game has a concept of "operating mode".
+
+Here are the operating modes:
+
+ - Local - game is operating in local mode only
+ - Remote - game is connected to a server and following sync
+
 Networking
 ==========
 
@@ -143,3 +150,8 @@ GoGame has a generic "Frontend" interface. When creating a game, a struct implem
      - Destroy()
    - Frontend components can receive function calls from the Go component code.
      - Examples: set position, etc.
+
+Game State
+==========
+
+Game state is a representation of the overall

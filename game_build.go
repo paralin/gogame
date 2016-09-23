@@ -28,8 +28,13 @@ func BuildGame(componentTable ComponentTable, gameRules GameRules, frontend Fron
 
 	// Initialize frontend
 	if game.Frontend != nil {
-		game.Frontend.Init()
+		rules := game.Frontend.Init()
+		if rules != nil {
+			game.FrontendGameRules = rules
+			rules.Init()
+		}
 	}
 
+	game.setOperatingMode(GameOperatingMode_LOCAL)
 	return game, nil
 }

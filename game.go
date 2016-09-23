@@ -13,6 +13,12 @@ type Game struct {
 
 	// Optional frontend instance
 	Frontend Frontend
+
+	// Optional frontend game rules
+	FrontendGameRules FrontendGameRules
+
+	// Game current operating mode
+	OperatingMode GameOperatingMode
 }
 
 // Add an entity. This should happen AFTER it's initialized.
@@ -24,10 +30,27 @@ func (g *Game) AddEntity(ent *Entity) {
 	}
 }
 
+// Propogate the operating mode change
+func (g *Game) setOperatingMode(opMode GameOperatingMode) {
+	g.OperatingMode = opMode
+	if g.FrontendGameRules != nil {
+		g.FrontendGameRules.SetGameOperatingMode(opMode)
+	}
+	if g.GameRules != nil {
+		g.GameRules.SetGameOperatingMode(opMode)
+	}
+}
+
 func (g *Game) Destroy() {
 	// Delete all entities
 	// Unregister all components
 	// etc...
+
+	g.GameRules.Destroy()
+
+	if g.FrontendGameRules != nil {
+		g.FrontendGameRules.Destroy()
+	}
 
 	if g.Frontend != nil {
 		g.Frontend.Destroy()
