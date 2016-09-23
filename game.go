@@ -19,6 +19,12 @@ type Game struct {
 
 	// Game current operating mode
 	OperatingMode GameOperatingMode
+
+	// Game settings
+	GameSettings GameSettings
+
+	// Game state
+	GameState *GameState
 }
 
 // Add an entity. This should happen AFTER it's initialized.

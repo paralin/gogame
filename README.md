@@ -151,7 +151,15 @@ GoGame has a generic "Frontend" interface. When creating a game, a struct implem
    - Frontend components can receive function calls from the Go component code.
      - Examples: set position, etc.
 
-Game State
-==========
+Main Update Tick
+================
 
-Game state is a representation of the overall
+The physics engine and game logic in general needs to tick at a constant rate. Furthermore, we don't want to waste time iterating over every single component, if some of them don't need an Update() tick call.
+
+GoGame uses a `time.Ticker` from Go to tick a main Update function. This update function calls in order:
+
+ - GameRules.Update
+ - Update on each entity with at least one update handler
+  - This calls Update() on each component with an update handler.
+
+This way, we only call Update() if it's going to do something with it. Also, in the frontend, we check if the Update() function exists in the beginning, and don't do the nil check again after. This is to save time.
