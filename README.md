@@ -174,8 +174,8 @@ An entity is created by an EntityFactory.
  - Entity is returned from the factory.
  - Caller of factory calls `ent.InitComponents()`
    - `component.Init()` is called for each component
- - Caller of factory calls `g.Frontend.AddEntity`, sets frontend entity if any is returned.
  - `g.AddEntity` is called
+   - `g.Frontend.AddEntity`, sets frontend entity if any is returned.
    - `ent.InitFrontendEntity()` is called.
    - `ent.LateInitComponents` is called.
    - The value of `ent.HasUpdateTick` is checked.
@@ -185,6 +185,7 @@ When spawning one over network (remote entity):
  - `EntityFromNetInit()`: creates with `&Entity{}`
   - calls `comp.InitWithData` on each component
  - `g.AddEntity` is called
+   - `g.Frontend.AddEntity`, sets frontend entity if any is returned.
    - `ent.InitFrontendEntity()` is called.
    - `ent.LateInitComponents` is called.
    - The value of `ent.HasUpdateTick` is checked.
