@@ -8,6 +8,9 @@ type Game struct {
 	// All known entities
 	EntityTable EntityTable
 
+	// All enities requiring update tick
+	TickEntityTable EntityTable
+
 	// Game rules instance
 	GameRules GameRules
 
@@ -33,6 +36,10 @@ func (g *Game) AddEntity(ent *Entity) {
 	if g.Frontend != nil {
 		ent.FrontendEntity = g.Frontend.AddEntity(ent)
 		ent.InitFrontendEntity()
+	}
+	ent.LateInitComponents()
+	if ent.HasUpdateTick {
+		g.TickEntityTable[ent.Id] = ent
 	}
 }
 

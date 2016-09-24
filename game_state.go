@@ -24,9 +24,18 @@ func (gs *GameState) tickThread() {
 		<-gs.updateTicker.C
 
 		// Tick
+		gs.update()
 	}
 	gs.updateTicker.Stop()
 	gs.updateTicker = nil
+}
+
+func (gs *GameState) update() {
+	game := gs.game
+	game.GameRules.Update()
+	for _, ent := range game.TickEntityTable {
+		ent.Update()
+	}
 }
 
 func (gs *GameState) Stop() {

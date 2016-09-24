@@ -12,11 +12,12 @@ func BuildGame(gameSettings GameSettings, componentTable ComponentTable, gameRul
 	}
 
 	game := &Game{
-		EntityTable:    NewEntityTable(),
-		GameRules:      gameRules,
-		ComponentTable: componentTable,
-		Frontend:       frontend,
-		GameSettings:   gameSettings,
+		EntityTable:     NewEntityTable(),
+		TickEntityTable: NewEntityTable(),
+		GameRules:       gameRules,
+		ComponentTable:  componentTable,
+		Frontend:        frontend,
+		GameSettings:    gameSettings,
 	}
 	game.GameState = &GameState{
 		game: game,

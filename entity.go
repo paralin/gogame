@@ -20,30 +20,67 @@ type Entity struct {
 	// Parent entity.
 	Parent *Entity
 
+	// Children entities
+	Children map[uint32]*Entity
+
 	// Map of component ID to implementation instance
 	Components map[uint32]Component
+
+	// Tick components
+	TickComponents map[uint32]Component
 
 	// Frontend components
 	FrontendComponents map[uint32]FrontendComponent
 
+	// Frontend components that have an update function
+	TickFrontendComponents map[uint32]FrontendComponent
+
 	// Frontend entity if set
 	FrontendEntity FrontendEntity
+
+	// True if Update() does anything
+	HasUpdateTick bool
 }
 
-/* Call after creating a fresh entity (without init data). */
+// Construct a new entity
+func NewEntity(id uint32) *Entity {
+	return &Entity{
+		Id:                     id,
+		Children:               make(map[uint32]*Entity),
+		Components:             make(map[uint32]Component),
+		TickComponents:         make(map[uint32]Component),
+		FrontendComponents:     make(map[uint32]FrontendComponent),
+		TickFrontendComponents: make(map[uint32]FrontendComponent),
+	}
+}
+
+func (ent *Entity) AddComponent(comp Component) {
+	meta := comp.Meta()
+	ent.Components[meta.Id] = comp
+	if comp.ShouldUpdate() {
+		ent.TickComponents[meta.Id] = comp
+		ent.HasUpdateTick = true
+	}
+}
+
+/* Calls Init() on all components. */
 func (ent *Entity) InitComponents() {
 	for _, comp := range ent.Components {
 		comp.Init(ent)
 	}
 }
 
-/* Call after creating any type of entity. */
+/* Calls InitLate() on all components and frontend components. */
 func (ent *Entity) LateInitComponents() {
 	for _, comp := range ent.Components {
 		comp.InitLate()
 	}
+	for _, comp := range ent.FrontendComponents {
+		comp.InitLate()
+	}
 }
 
+/* Initializes the frontend entity, if one has been set. */
 func (ent *Entity) InitFrontendEntity() {
 	if ent.FrontendEntity == nil {
 		return
@@ -55,6 +92,15 @@ func (ent *Entity) InitFrontendEntity() {
 			ent.FrontendComponents[id] = fe
 			comp.InitFrontend(fe)
 		}
+	}
+}
+
+func (ent *Entity) Update() {
+	for _, comp := range ent.TickComponents {
+		comp.Update()
+	}
+	for _, comp := range ent.TickFrontendComponents {
+		comp.Update()
 	}
 }
 
@@ -95,16 +141,17 @@ func (ent *Entity) ToNetworkInit() *NetEntity {
 	}
 }
 
+// Adds child, before child is initialized
+func (pent *Entity) AddChild(ent *Entity) {
+	pent.Children[ent.Id] = ent
+}
+
 /*
  * Instantiate from network representation.
  */
 func (gr *Game) EntityFromNetInit(ent *NetEntity) (*Entity, error) {
 	entTable := gr.EntityTable
-	res := &Entity{
-		Id:                 ent.Id,
-		Components:         make(map[uint32]Component),
-		FrontendComponents: make(map[uint32]FrontendComponent),
-	}
+	res := NewEntity(ent.Id)
 
 	if ent.ParentId != 0 {
 		if entTable == nil {
@@ -115,6 +162,7 @@ func (gr *Game) EntityFromNetInit(ent *NetEntity) (*Entity, error) {
 			return nil, fmt.Errorf("Entity %d has unknown parent ID %d", ent.Id, ent.ParentId)
 		}
 		res.Parent = parent
+		parent.AddChild(res)
 	}
 
 	for _, comp := range ent.Component {
@@ -126,14 +174,8 @@ func (gr *Game) EntityFromNetInit(ent *NetEntity) (*Entity, error) {
 			return nil, err
 		}
 		res.Components[comp.Id] = rcomp
-		if len(comp.InitData) > 0 {
-			rcomp.InitWithData(res, comp.InitData)
-		} else {
-			rcomp.Init(res)
-		}
+		rcomp.InitWithData(res, comp.InitData)
 	}
-
-	res.LateInitComponents()
 
 	return res, nil
 }

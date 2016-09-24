@@ -163,3 +163,28 @@ GoGame uses a `time.Ticker` from Go to tick a main Update function. This update 
   - This calls Update() on each component with an update handler.
 
 This way, we only call Update() if it's going to do something with it. Also, in the frontend, we check if the Update() function exists in the beginning, and don't do the nil check again after. This is to save time.
+
+Entity Lifecycle
+================
+
+An entity is created by an EntityFactory. The entity factor
+
+ - Entity is created in the factory with `&MyEntity{}`
+ - Each component is added with `AddComponent(Component)`
+ - Entity is returned from the factory.
+ - Caller of factory calls `ent.InitComponents()`
+   - `component.Init()` is called for each component
+ - Caller of factory calls `g.Frontend.AddEntity`, sets frontend entity if any is returned.
+ - `g.AddEntity` is called
+   - `ent.InitFrontendEntity()` is called.
+   - `ent.LateInitComponents` is called.
+   - The value of `ent.HasUpdateTick` is checked.
+
+When spawning one over network (remote entity):
+
+ - `EntityFromNetInit()`: creates with `&Entity{}`
+  - calls `comp.InitWithData` on each component
+ - `g.AddEntity` is called
+   - `ent.InitFrontendEntity()` is called.
+   - `ent.LateInitComponents` is called.
+   - The value of `ent.HasUpdateTick` is checked.
