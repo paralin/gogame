@@ -10,14 +10,25 @@ var TransformComponentMeta gogame.ComponentMeta = gogame.ComponentMeta{
 }
 
 type TransformComponent struct {
-	Entity *gogame.Entity
-	Data   TransformData
+	Entity   *gogame.Entity
+	Data     TransformData
+	Frontend gogame.FrontendComponent
 }
 
+// Initialize a brand new transform component
 func (tc *TransformComponent) Init(ent *gogame.Entity) {
 	tc.Entity = ent
+	tc.Data.Position = &TransformPosition{
+		X: 0,
+		Y: 0,
+	}
+	tc.Data.Scale = &TransformScale{
+		XScale: 0.2,
+		YScale: 0.2,
+	}
 }
 
+// Initialize a remotely created transform component, over the network
 func (tc *TransformComponent) InitWithData(ent *gogame.Entity, data []byte) {
 	tc.Entity = ent
 
@@ -26,6 +37,13 @@ func (tc *TransformComponent) InitWithData(ent *gogame.Entity, data []byte) {
 }
 
 func (tc *TransformComponent) InitLate() {
+}
+
+func (tc *TransformComponent) ShouldUpdate() bool {
+	return false
+}
+
+func (tc *TransformComponent) Update() {
 }
 
 func (tc *TransformComponent) Meta() gogame.ComponentMeta {
@@ -38,22 +56,33 @@ func (tc *TransformComponent) InitData() []byte {
 }
 
 func (tc *TransformComponent) InitFrontend(fe gogame.FrontendComponent) {
+	tc.Frontend = fe
+	tc.SyncPosition()
+}
+
+// Tells the frontend to update position.
+func (tc *TransformComponent) SyncPosition() {
+	if tc.Frontend == nil {
+		return
+	}
+	tc.Frontend.Call("setPosition", &tc.Data)
 }
 
 func (tc *TransformComponent) Destroy() {
 }
 
-type TransformComponentFactory struct {
+// Factory to spawn transform components
+type transformComponentFactory struct {
 }
 
-func (tff *TransformComponentFactory) Meta() gogame.ComponentMeta {
+func (tff *transformComponentFactory) Meta() gogame.ComponentMeta {
 	return TransformComponentMeta
 }
 
-func (tff *TransformComponentFactory) New() gogame.Component {
+func (tff *transformComponentFactory) New() gogame.Component {
 	return &TransformComponent{}
 }
 
 // Assert at compile time the component is valid
 // This line will fail otherwise.
-var componentAssertion gogame.Component = &TransformComponent{}
+var TransformComponentFactory gogame.ComponentFactory = &transformComponentFactory{}

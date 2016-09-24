@@ -15,6 +15,12 @@ type Component interface {
 	// Called after all components have been Init() or InitWithData()
 	InitLate()
 
+	// Check if Update() tick will be required.
+	ShouldUpdate() bool
+
+	// Update tick func
+	Update()
+
 	// Return the metadata for this component
 	Meta() ComponentMeta
 

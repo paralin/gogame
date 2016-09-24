@@ -79,6 +79,13 @@ There are also other events you need to handle, examples include:
 You implement this logic in your own Game Rules type. This is passed to
 GoGame when you construct the Game on the client or server.
 
+A game doesn't have to be networked, you could make a single player game in the browser or just a sim in the server. Thus, the Game Rules and overall game has a concept of "operating mode".
+
+Here are the operating modes:
+
+ - Local - game is operating in local mode only
+ - Remote - game is connected to a server and following sync
+
 Networking
 ==========
 
@@ -143,3 +150,42 @@ GoGame has a generic "Frontend" interface. When creating a game, a struct implem
      - Destroy()
    - Frontend components can receive function calls from the Go component code.
      - Examples: set position, etc.
+
+Main Update Tick
+================
+
+The physics engine and game logic in general needs to tick at a constant rate. Furthermore, we don't want to waste time iterating over every single component, if some of them don't need an Update() tick call.
+
+GoGame uses a `time.Ticker` from Go to tick a main Update function. This update function calls in order:
+
+ - GameRules.Update
+ - Update on each entity with at least one update handler
+  - This calls Update() on each component with an update handler.
+
+This way, we only call Update() if it's going to do something with it. Also, in the frontend, we check if the Update() function exists in the beginning, and don't do the nil check again after. This is to save time.
+
+Entity Lifecycle
+================
+
+An entity is created by an EntityFactory.
+
+ - Entity is created in the factory with `&MyEntity{}`
+ - Each component is added with `AddComponent(Component)`
+ - Entity is returned from the factory.
+ - Caller of factory calls `ent.InitComponents()`
+   - `component.Init()` is called for each component
+ - `g.AddEntity` is called
+   - `g.Frontend.AddEntity`, sets frontend entity if any is returned.
+   - `ent.InitFrontendEntity()` is called.
+   - `ent.LateInitComponents` is called.
+   - The value of `ent.HasUpdateTick` is checked.
+
+When spawning one over network (remote entity):
+
+ - `EntityFromNetInit()`: creates with `&Entity{}`
+  - calls `comp.InitWithData` on each component
+ - `g.AddEntity` is called
+   - `g.Frontend.AddEntity`, sets frontend entity if any is returned.
+   - `ent.InitFrontendEntity()` is called.
+   - `ent.LateInitComponents` is called.
+   - The value of `ent.HasUpdateTick` is checked.

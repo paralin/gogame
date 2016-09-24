@@ -1,7 +1,7 @@
 package gogame
 
 type Frontend interface {
-	Init()
+	Init() FrontendGameRules
 	AddEntity(entity *Entity) FrontendEntity
 	Destroy()
 }
@@ -14,6 +14,18 @@ type FrontendEntity interface {
 }
 
 type FrontendComponent interface {
+	Call(name string, args ...interface{}) interface{}
+	// Return true if Update() calls are needed
+	Init() bool
+	// Called after all of the InitLate() is called on FrontendEntity
+	InitLate()
+	// Update tick
+	Update()
+	Destroy()
+}
+
+type FrontendGameRules interface {
 	Init()
+	SetGameOperatingMode(opMode GameOperatingMode)
 	Destroy()
 }

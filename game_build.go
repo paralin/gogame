@@ -2,7 +2,7 @@ package gogame
 
 import "errors"
 
-func BuildGame(componentTable ComponentTable, gameRules GameRules, frontend Frontend) (*Game, error) {
+func BuildGame(gameSettings GameSettings, componentTable ComponentTable, gameRules GameRules, frontend Frontend) (*Game, error) {
 	if componentTable == nil {
 		return nil, errors.New("Component table must not be nil.")
 	}
@@ -12,10 +12,15 @@ func BuildGame(componentTable ComponentTable, gameRules GameRules, frontend Fron
 	}
 
 	game := &Game{
-		EntityTable:    NewEntityTable(),
-		GameRules:      gameRules,
-		ComponentTable: componentTable,
-		Frontend:       frontend,
+		EntityTable:     NewEntityTable(),
+		TickEntityTable: NewEntityTable(),
+		GameRules:       gameRules,
+		ComponentTable:  componentTable,
+		Frontend:        frontend,
+		GameSettings:    gameSettings,
+	}
+	game.GameState = &GameState{
+		game: game,
 	}
 
 	// Test component table
@@ -28,8 +33,13 @@ func BuildGame(componentTable ComponentTable, gameRules GameRules, frontend Fron
 
 	// Initialize frontend
 	if game.Frontend != nil {
-		game.Frontend.Init()
+		rules := game.Frontend.Init()
+		if rules != nil {
+			game.FrontendGameRules = rules
+			rules.Init()
+		}
 	}
 
+	game.setOperatingMode(GameOperatingMode_LOCAL)
 	return game, nil
 }
