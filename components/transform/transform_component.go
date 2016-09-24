@@ -18,8 +18,14 @@ type TransformComponent struct {
 // Initialize a brand new transform component
 func (tc *TransformComponent) Init(ent *gogame.Entity) {
 	tc.Entity = ent
-	tc.Data.Position = &TransformPosition{}
-	tc.Data.Scale = &TransformScale{}
+	tc.Data.Position = &TransformPosition{
+		X: 0,
+		Y: 0,
+	}
+	tc.Data.Scale = &TransformScale{
+		XScale: 0.2,
+		YScale: 0.2,
+	}
 }
 
 // Initialize a remotely created transform component, over the network
@@ -59,7 +65,7 @@ func (tc *TransformComponent) SyncPosition() {
 	if tc.Frontend == nil {
 		return
 	}
-	tc.Frontend.Call("setPosition", tc.Data)
+	tc.Frontend.Call("setPosition", &tc.Data)
 }
 
 func (tc *TransformComponent) Destroy() {
