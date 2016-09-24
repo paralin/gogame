@@ -30,6 +30,14 @@ type Game struct {
 	GameState *GameState
 }
 
+func (g *Game) Start() {
+	g.GameState.Start()
+}
+
+func (g *Game) Stop() {
+	g.GameState.Stop()
+}
+
 // Add an entity. This should happen AFTER it's initialized.
 func (g *Game) AddEntity(ent *Entity) {
 	g.EntityTable[ent.Id] = ent
@@ -59,6 +67,7 @@ func (g *Game) Destroy() {
 	// Unregister all components
 	// etc...
 
+	g.GameState.Stop()
 	g.GameRules.Destroy()
 
 	if g.FrontendGameRules != nil {
