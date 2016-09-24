@@ -8,6 +8,9 @@ mkdir -p ./goworkspace/bin
 mkdir -p ./goworkspace/src/github.com/fuserobotics
 ln -fs $(pwd) ./goworkspace/src/github.com/fuserobotics/gogame
 
-pushd ${GOPATH}/src/github.com/fuserobotics/gogame
-go get ./...
+go get -u -v github.com/gopherjs/gopherjs
+pushd ./goworkspace/src/github.com/fuserobotics/gogame
+go get -v ./
 popd
+
+set -x
