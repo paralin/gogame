@@ -51,10 +51,14 @@ func (g *Game) AddEntity(ent *Entity) {
 	}
 }
 
-func (g *Game) SpawnEntity(entFactory EntityFactory) *Entity {
+func (g *Game) SpawnEntity(entFactory EntityFactory, parent *Entity) *Entity {
 	ent := entFactory.Spawn(g.GameRules.NextEntityId())
 	if ent == nil {
 		return ent
+	}
+	ent.Parent = parent
+	if parent != nil {
+		parent.AddChild(ent)
 	}
 	ent.InitComponents()
 	g.AddEntity(ent)

@@ -23,6 +23,9 @@ type Entity struct {
 	// Children entities
 	Children map[uint32]*Entity
 
+	// Internal reference to the game
+	game *Game
+
 	// Map of component ID to implementation instance
 	Components map[uint32]Component
 
@@ -43,9 +46,10 @@ type Entity struct {
 }
 
 // Construct a new entity
-func NewEntity(id uint32) *Entity {
+func NewEntity(id uint32, game *Game) *Entity {
 	return &Entity{
 		Id:                     id,
+		game:                   game,
 		Children:               make(map[uint32]*Entity),
 		Components:             make(map[uint32]Component),
 		TickComponents:         make(map[uint32]Component),
@@ -146,12 +150,17 @@ func (pent *Entity) AddChild(ent *Entity) {
 	pent.Children[ent.Id] = ent
 }
 
+// Spawn a child
+func (pent *Entity) SpawnChild(entFactory EntityFactory) *Entity {
+	return pent.game.SpawnEntity(entFactory, pent)
+}
+
 /*
  * Instantiate from network representation.
  */
 func (gr *Game) EntityFromNetInit(ent *NetEntity) (*Entity, error) {
 	entTable := gr.EntityTable
-	res := NewEntity(ent.Id)
+	res := NewEntity(ent.Id, gr)
 
 	if ent.ParentId != 0 {
 		if entTable == nil {
