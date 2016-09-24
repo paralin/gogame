@@ -10,14 +10,19 @@ var TransformComponentMeta gogame.ComponentMeta = gogame.ComponentMeta{
 }
 
 type TransformComponent struct {
-	Entity *gogame.Entity
-	Data   TransformData
+	Entity   *gogame.Entity
+	Data     TransformData
+	Frontend gogame.FrontendComponent
 }
 
+// Initialize a brand new transform component
 func (tc *TransformComponent) Init(ent *gogame.Entity) {
 	tc.Entity = ent
+	tc.Data.Position = &TransformPosition{}
+	tc.Data.Scale = &TransformScale{}
 }
 
+// Initialize a remotely created transform component, over the network
 func (tc *TransformComponent) InitWithData(ent *gogame.Entity, data []byte) {
 	tc.Entity = ent
 
@@ -45,22 +50,33 @@ func (tc *TransformComponent) InitData() []byte {
 }
 
 func (tc *TransformComponent) InitFrontend(fe gogame.FrontendComponent) {
+	tc.Frontend = fe
+	tc.SyncPosition()
+}
+
+// Tells the frontend to update position.
+func (tc *TransformComponent) SyncPosition() {
+	if tc.Frontend == nil {
+		return
+	}
+	tc.Frontend.Call("setPosition", tc.Data)
 }
 
 func (tc *TransformComponent) Destroy() {
 }
 
-type TransformComponentFactory struct {
+// Factory to spawn transform components
+type transformComponentFactory struct {
 }
 
-func (tff *TransformComponentFactory) Meta() gogame.ComponentMeta {
+func (tff *transformComponentFactory) Meta() gogame.ComponentMeta {
 	return TransformComponentMeta
 }
 
-func (tff *TransformComponentFactory) New() gogame.Component {
+func (tff *transformComponentFactory) New() gogame.Component {
 	return &TransformComponent{}
 }
 
 // Assert at compile time the component is valid
 // This line will fail otherwise.
-var componentAssertion gogame.Component = &TransformComponent{}
+var TransformComponentFactory gogame.ComponentFactory = &transformComponentFactory{}

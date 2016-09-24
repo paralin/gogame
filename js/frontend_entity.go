@@ -15,6 +15,10 @@ func (fe *JsFrontendEntity) Init() {
 	}
 }
 
+func (je *JsFrontendEntity) Call(fn string, args ...interface{}) interface{} {
+	return je.Object.Call(fn, args)
+}
+
 func (fe *JsFrontendEntity) AddComponent(id uint32) gogame.FrontendComponent {
 	if fe.Object.Get("addComponent") == js.Undefined {
 		return nil

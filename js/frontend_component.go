@@ -19,6 +19,10 @@ func (fc *JsFrontendComponent) Init() bool {
 	return fc.hasUpdateFunc
 }
 
+func (fc *JsFrontendComponent) Call(fn string, args ...interface{}) interface{} {
+	return fc.Object.Call(fn, args)
+}
+
 func (fc *JsFrontendComponent) InitLate() {
 	if fc.Object.Get("initLate") != js.Undefined {
 		fc.Object.Call("initLate")

@@ -7,7 +7,7 @@ import (
 
 func RegisterComponents(table gogame.ComponentTable) {
 	// Register transform component
-	table[transform.TransformComponentMeta.Id] = &transform.TransformComponentFactory{}
+	table[transform.TransformComponentMeta.Id] = transform.TransformComponentFactory
 }
 
 // Build a pre-initialized component table

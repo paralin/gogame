@@ -26,7 +26,7 @@ func (fe *JsFrontend) AddEntity(entity *gogame.Entity) gogame.FrontendEntity {
 		return nil
 	}
 	res := fe.Object.Call("addEntity", entity.ToNetworkInit())
-	if res == nil {
+	if res == nil || res == js.Undefined {
 		return nil
 	}
 	return &JsFrontendEntity{Object: res}

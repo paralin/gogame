@@ -14,6 +14,7 @@ type FrontendEntity interface {
 }
 
 type FrontendComponent interface {
+	Call(name string, args ...interface{}) interface{}
 	// Return true if Update() calls are needed
 	Init() bool
 	// Called after all of the InitLate() is called on FrontendEntity

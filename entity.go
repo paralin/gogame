@@ -90,11 +90,13 @@ func (ent *Entity) InitFrontendEntity() {
 		return
 	}
 	for id, comp := range ent.Components {
-		fe := ent.FrontendEntity.AddComponent(comp.Meta().Id)
-		if fe != nil {
-			fe.Init()
-			ent.FrontendComponents[id] = fe
-			comp.InitFrontend(fe)
+		if ent.FrontendEntity != nil {
+			fe := ent.FrontendEntity.AddComponent(comp.Meta().Id)
+			if fe != nil {
+				fe.Init()
+				ent.FrontendComponents[id] = fe
+				comp.InitFrontend(fe)
+			}
 		}
 	}
 }
