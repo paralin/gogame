@@ -28,6 +28,13 @@ func (tc *TransformComponent) InitWithData(ent *gogame.Entity, data []byte) {
 func (tc *TransformComponent) InitLate() {
 }
 
+func (tc *TransformComponent) ShouldUpdate() bool {
+	return false
+}
+
+func (tc *TransformComponent) Update() {
+}
+
 func (tc *TransformComponent) Meta() gogame.ComponentMeta {
 	return TransformComponentMeta
 }
