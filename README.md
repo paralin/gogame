@@ -167,7 +167,7 @@ This way, we only call Update() if it's going to do something with it. Also, in 
 Entity Lifecycle
 ================
 
-An entity is created by an EntityFactory. The entity factor
+An entity is created by an EntityFactory.
 
  - Entity is created in the factory with `&MyEntity{}`
  - Each component is added with `AddComponent(Component)`

@@ -5,5 +5,6 @@ type GameRules interface {
 	Init(game *Game)
 	SetGameOperatingMode(opMode GameOperatingMode)
 	Update()
+	NextEntityId() uint32
 	Destroy()
 }

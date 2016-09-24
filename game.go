@@ -51,6 +51,16 @@ func (g *Game) AddEntity(ent *Entity) {
 	}
 }
 
+func (g *Game) SpawnEntity(entFactory EntityFactory) *Entity {
+	ent := entFactory.Spawn(g.GameRules.NextEntityId())
+	if ent == nil {
+		return ent
+	}
+	ent.InitComponents()
+	g.AddEntity(ent)
+	return ent
+}
+
 // Propogate the operating mode change
 func (g *Game) setOperatingMode(opMode GameOperatingMode) {
 	g.OperatingMode = opMode
