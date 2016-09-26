@@ -24,7 +24,7 @@ type Entity struct {
 	Children map[uint32]*Entity
 
 	// Internal reference to the game
-	game *Game
+	Game *Game
 
 	// Map of component ID to implementation instance
 	Components map[uint32]Component
@@ -49,7 +49,7 @@ type Entity struct {
 func NewEntity(id uint32, game *Game) *Entity {
 	return &Entity{
 		Id:                     id,
-		game:                   game,
+		Game:                   game,
 		Children:               make(map[uint32]*Entity),
 		Components:             make(map[uint32]Component),
 		TickComponents:         make(map[uint32]Component),
@@ -162,7 +162,7 @@ func (pent *Entity) AddChild(ent *Entity) {
 
 // Spawn a child
 func (pent *Entity) SpawnChild(entFactory EntityFactory) *Entity {
-	return pent.game.SpawnEntity(entFactory, pent)
+	return pent.Game.SpawnEntity(entFactory, pent)
 }
 
 /*

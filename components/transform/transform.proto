@@ -2,13 +2,13 @@ syntax = "proto3";
 package transform;
 
 message TransformPosition {
-  double x = 1;
-  double y = 2;
+  float x = 1;
+  float y = 2;
 }
 
 message TransformScale {
-  double x_scale = 1;
-  double y_scale = 2;
+  float x_scale = 1;
+  float y_scale = 2;
 }
 
 message TransformData {

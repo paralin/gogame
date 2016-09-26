@@ -28,6 +28,9 @@ type Game struct {
 
 	// Game state
 	GameState *GameState
+
+	// Additional storage (physics space, etc)
+	GameCommon interface{}
 }
 
 func (g *Game) Start() {
@@ -52,7 +55,7 @@ func (g *Game) AddEntity(ent *Entity) {
 }
 
 func (g *Game) SpawnEntity(entFactory EntityFactory, parent *Entity) *Entity {
-	ent := entFactory.Spawn(g.GameRules.NextEntityId())
+	ent := entFactory.Spawn(g.GameRules.NextEntityId(), g)
 	if ent == nil {
 		return ent
 	}

@@ -199,3 +199,9 @@ Components need to reference other components. In `initLate()`, they can grab a 
 if component, ok := entity.GetComponent(componentId).(ComponentType); ok {
 }
 ```
+Unit Conversions
+================
+
+The game itself should internally use a common unit. Positions are doubles in the transform component, so the units could be something like 1 unit = 1 meter.
+
+The frontend should convert the units to screen pixels.
