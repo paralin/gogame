@@ -189,3 +189,13 @@ When spawning one over network (remote entity):
    - `ent.InitFrontendEntity()` is called.
    - `ent.LateInitComponents` is called.
    - The value of `ent.HasUpdateTick` is checked.
+
+Entity / Component API
+======================
+
+Components need to reference other components. In `initLate()`, they can grab a reference to another component like so:
+
+```go
+if component, ok := entity.GetComponent(componentId).(ComponentType); ok {
+}
+```
