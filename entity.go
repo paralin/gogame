@@ -67,6 +67,14 @@ func (ent *Entity) AddComponent(comp Component) {
 	}
 }
 
+func (ent *Entity) GetComponent(id uint32) Component {
+	comp, ok := ent.Components[id]
+	if !ok {
+		return nil
+	}
+	return comp
+}
+
 /* Calls Init() on all components. */
 func (ent *Entity) InitComponents() {
 	for _, comp := range ent.Components {
