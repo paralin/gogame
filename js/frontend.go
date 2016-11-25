@@ -1,7 +1,7 @@
 package js
 
 import (
-	"github.com/fuserobotics/gogame"
+	"github.com/paralin/gogame"
 	"github.com/gopherjs/gopherjs/js"
 )
 

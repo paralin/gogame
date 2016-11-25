@@ -1,8 +1,8 @@
 package components
 
 import (
-	"github.com/fuserobotics/gogame"
-	"github.com/fuserobotics/gogame/components/transform"
+	"github.com/paralin/gogame"
+	"github.com/paralin/gogame/components/transform"
 )
 
 func RegisterComponents(table gogame.ComponentTable) {

@@ -1,7 +1,7 @@
 package transform
 
 import (
-	"github.com/fuserobotics/gogame"
+	"github.com/paralin/gogame"
 	"github.com/golang/protobuf/proto"
 )
 
